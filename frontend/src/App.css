@@ -1,0 +1,230 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+  flex-direction: column; /* Permet d'éviter le chevauchement de l'en-tête */
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 160px; /* Pour éviter que le formulaire touche l'en-tête */
+}
+
+.header {
+  background-color: #31C48D;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.logo {
+  max-height: 150px;
+  width: auto;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 160px); 
+  margin-top: 180px; 
+}
+
+/* Nouveau style pour la boîte du formulaire */
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  top: 20px;
+}
+
+.form-box{
+  background: white;
+  padding: 50px;
+  width: 500px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-top: 200px;
+  
+}
+
+/* Style des champs de saisie */
+.form-box input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Style des boutons */
+button {
+  background-color: #31C48D;
+  color: white;
+  border: none; 
+  padding: 12px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%; 
+  max-width: 300px; 
+  margin: 10px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center; 
+  position: relative;
+  right: -15px;
+}
+
+
+button:hover {
+  background-color: #28A878;
+}
+.text-danger {
+  color: red; /* Assure-toi que la couleur est définie sur rouge */
+  font-size: 0.9em; /* Taille de police pour les messages d'erreur */
+}
+
+.form-box form {
+  display: flex;
+  flex-direction: column; /* Aligne les éléments verticalement */
+  gap: 10px; /* Ajoute un espacement entre les boutons */
+ 
+}
+
+.form-box .btn {
+  display: block; /* S'assure que chaque bouton prend une ligne */
+  width: 100%; /* Les boutons prennent toute la largeur du formulaire */
+}
+
+.empreinte-image {
+  max-width: 600px;/*Image dépassera pas 80% du conteneur */
+  max-height: 400px; /* Limite la hauteur pour ne pas qu'elle prenne tout l'écran */
+  height: auto;  /* Maintient le ratio de l'image */
+  display: block;  /* Supprime les marges blanches */
+  margin: 20px auto; /* Centre l’image horizontalement */
+  border-radius: 10px; /* Ajoute un arrondi pour un meilleur design */
+}
+
+
+
+
+/* Bouton photo */
+ .stop-button, .switch-button{
+  background-color: #31C48D;
+  border: none;
+  padding: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+  margin: 10px;
+}
+
+.camera-button:hover, .stop-button:hover, .switch-button{
+  background-color: #28A878;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .scan-text {
+    font-size: 22px; /* Réduit la taille du texte sur mobile */
+  }
+
+  .empreinte-image {
+    max-width: 95%; /* Ajuste la taille sur petits écrans */
+    max-height: 320px;
+  }
+
+  
+}
+
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: auto; /* Ajuste la hauteur */
+  margin-top: 500px; /* Évite qu’il soit caché sous l’en-tête */
+  padding-bottom: 50px; /* Ajoute un espace en bas */
+}
+
+.dashboard-title {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  color: #333; /* Assure une bonne visibilité */
+  margin-bottom: 0; /* Espacement avec l’image */
+}
+
+.camera-feed {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 10px;
+  margin-top: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+video {
+  width: 100%;
+  max-width: 400px;
+  border: 2px solid #31C48D;
+  border-radius: 10px;
+}
+.logout-button {
+  background-color: #31C48D; /* Même couleur que l'en-tête */
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  position: absolute; /* Position absolue pour le placer dans le coin */
+  right: 10px; /* Distance de la droite */
+  width: auto; /* Ajuster la largeur automatiquement */
+  max-width: 200px;
+  top: 150px;
+}
+
+.logout-button:hover {
+  background-color: #2AA075; /* Assombrissement léger au survol */
+}
+
+.camera-button{
+  background-color: #31C48D;
+  border: none;
+  padding: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+  margin: 10px;
+  margin-right: 10px;
+}
+
