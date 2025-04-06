@@ -21,7 +21,7 @@ function Login() {
     // Fonction de soumission du formulaire de connexion
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setErrors(Validation(values)); // Validation des champs
+        setErrors(Validation(values)); 
 
         // Vérifier si les champs email et password sont remplis
         if (!values.email || !values.password) {
@@ -41,18 +41,17 @@ function Login() {
             console.log("Réponse du serveur :", data); 
 
             if (response.ok) {
-                // Stocker le token JWT dans le stockage local (localStorage)
+                // Stockage du token JWT dans le stockage local (localStorage)
                 localStorage.setItem("token", data.token);
 
-                // Afficher un message de succès
+                
                 setServerMessage({ text: "Connexion réussie !", type: "success" });
 
-                // Redirection vers le tableau de bord après 2 secondes
                 setTimeout(() => {
                     navigate('/dashboard');  
                 }, 2000);
             } else {
-                // Afficher un message d'erreur en cas d'échec
+             
                 setServerMessage({ text: data.message, type: "error" });
             }
         } catch (error) {
@@ -61,7 +60,7 @@ function Login() {
     };
 
     return (  
-        <div className='form-container'>
+        <div className='form-container-login'>
             <div className='form-box'>
             <h1>Bienvenue sur Wildlens !</h1>
                 <h2 style={{ backgroundColor: '#31C48D', color: 'white', padding: '10px', borderRadius: '5px', textAlign: 'center' }}>Connexion</h2>
@@ -89,7 +88,6 @@ function Login() {
                         {errors.password && <span className='text-danger'>{errors.password}</span>}
                     </div>
 
-                    {/* Affichage des messages d'erreur ou de succès */}
                     {serverMessage && (
                         <div style={{ 
                             color: serverMessage.type === "success" ? "#31C48D" : "red", 

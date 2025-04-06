@@ -13,23 +13,23 @@ function Signup() {
         confirmpassword: '',
     });
 
-    const navigate = useNavigate(); // Hook pour rediriger l'utilisateur après l'inscription
+    const navigate = useNavigate(); 
 
     // États pour la gestion des erreurs et des messages de retour
-    const [errors, setErrors] = useState({}); // Stocke les erreurs de validation
-    const [serverError, setServerError] = useState(''); // Stocke les erreurs renvoyées par le serveur
-    const [successMessage, setSuccessMessage] = useState(''); // Stocke un message de succès en cas d'inscription réussie
+    const [errors, setErrors] = useState({}); 
+    const [serverError, setServerError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
 
-    // Fonction pour mettre à jour les valeurs du formulaire à chaque saisie
+  
     const handleInput = (event) => {
         setValues((prev) => ({ ...prev, [event.target.name]: event.target.value }));
     };
 
-    // Fonction pour gérer la soumission du formulaire
+
     const handleSubmit = (event) => {
-        event.preventDefault(); // Empêche le rechargement de la page lors de la soumission du formulaire
+        event.preventDefault(); 
         
-        console.log("Formulaire soumis avec :", values); // Affiche les valeurs du formulaire dans la console
+        console.log("Formulaire soumis avec :", values); 
 
         // Validation des champs du formulaire
         const validationErrors = Validation(values);
@@ -45,7 +45,7 @@ function Signup() {
             axios.post('http://localhost:3000/signup', values)
                 .then(res => {
                     console.log('Réponse du serveur:', res.data);
-                    setSuccessMessage("Utilisateur enregistré avec succès !"); // Affiche un message de succès
+                    setSuccessMessage("Utilisateur enregistré avec succès !"); 
                     setServerError('');
 
                     // Attente de 5 secondes avant de rediriger vers la page de connexion
@@ -88,7 +88,7 @@ function Signup() {
                 {serverError && <p className='text-danger text-center'>{serverError}</p>} 
 
                 <form onSubmit={handleSubmit}>
-                    {/* Champ Nom */}
+                    
                     <div className='mb-3'>
                         <label htmlFor="surname"><strong>Nom</strong></label>
                         <input
@@ -102,7 +102,7 @@ function Signup() {
                         {errors.surname && <span className='text-danger'>{errors.surname}</span>}
                     </div>
 
-                    {/* Champ Prénom */}
+                   
                     <div className='mb-3'>
                         <label htmlFor="firstname"><strong>Prénoms</strong></label>
                         <input
@@ -116,7 +116,7 @@ function Signup() {
                         {errors.firstname && <span className='text-danger'>{errors.firstname}</span>}
                     </div>
 
-                    {/* Champ Email */}
+                    
                     <div className='mb-3'>
                         <label htmlFor="email"><strong>Email</strong></label>
                         <input
@@ -131,7 +131,7 @@ function Signup() {
                         {serverError && <span className='text-danger'>{serverError}</span>}
                     </div>
 
-                    {/* Champ Mot de passe */}
+                    
                     <div className='mb-3'>
                         <label htmlFor="password"><strong>Mot de passe</strong></label>
                         <input
@@ -145,7 +145,7 @@ function Signup() {
                         {errors.password && <span className='text-danger'>{errors.password}</span>}
                     </div>
 
-                    {/* Champ Confirmation du mot de passe */}
+                    
                     <div className='mb-3'>
                         <label htmlFor="confirmpassword"><strong>Confirmer le mot de passe</strong></label>
                         <input
@@ -159,7 +159,7 @@ function Signup() {
                         {errors.confirmpassword && <span className='text-danger'>{errors.confirmpassword}</span>}
                     </div>
 
-                    {/* Bouton d'inscription */}
+                   
                     <button
                         type='submit'
                         className='btn btn-success w-100'
@@ -175,7 +175,7 @@ function Signup() {
                         S'inscrire
                     </button>
 
-                    {/* Lien vers la page de connexion */}
+                    
                     <Link
                         to="/"
                         className='btn border w-100 rounded-0 text-decoration-none text-center d-block'
@@ -194,5 +194,5 @@ function Signup() {
     );
 }
 
-export default Signup; // Exporte le composant pour l'utiliser ailleurs
+export default Signup; 
 
