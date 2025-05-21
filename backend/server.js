@@ -146,7 +146,7 @@ app.post('/login', (req, res) => {
 
 // Route pour enregistrer un scan
 app.post('/scans', authenticateToken, (req, res) => {
-    const { species, timestamp, imageCount, averageTime, image } = req.body;
+    const { species, timestamp, imageCount, averageTime, image, latitude, longitude } = req.body;
     const userId = req.user.id;
 
     // Validation des champs requis
@@ -154,11 +154,11 @@ app.post('/scans', authenticateToken, (req, res) => {
         return res.status(400).json({ message: 'Tous les champs sont requis' });
     }
 
-    console.log('Données reçues pour /scans :', { species, timestamp, imageCount, averageTime, userId });
+    console.log('Données reçues pour /scans :', { species, timestamp, imageCount, averageTime, image, latitude, longitude, userId });
 
-    // Insertion du scan dans la base de données (le timestamp est déjà au bon format depuis Dashboard.js)
-    const query = 'INSERT INTO scans (species, timestamp, image_count, average_time, image, user_id) VALUES (?, ?, ?, ?, ?, ?)';
-    db.query(query, [species, timestamp, imageCount, averageTime, image, userId], (err) => {
+    // Insertion du scan dans la base de données
+    const query = 'INSERT INTO scans (species, timestamp, image_count, average_time, image, latitude, longitude, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    db.query(query, [species, timestamp, imageCount, averageTime, image, latitude || null, longitude || null, userId], (err) => {
         if (err) {
             console.error('Erreur MySQL (Scan) :', err.message);
             return res.status(500).json({ message: `Erreur lors de l’enregistrement du scan : ${err.message}` });

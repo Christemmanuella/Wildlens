@@ -5,7 +5,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: url(E:\Wildlens3\frontend\public\fond.jpg);
+  background: url('E:\Wildlens3\frontend\public\fond.jpg');
   flex-direction: column;
 }
 
@@ -21,19 +21,44 @@ body {
 .header {
   background-color: #31C48D;
   width: 100%;
-  justify-content: center;
-  align-items: center;
   height: 150px;
   display: flex;
+  justify-content: center; /* Centre le logo */
+  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
+  padding: 0 20px;
 }
 
 .logo {
-  max-height: 150px;
+  max-height: 120px; /* Réduit légèrement pour mieux centrer */
   width: auto;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%); /* Centre le logo horizontalement */
+}
+
+.logout-button {
+  background-color: #31C48D;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: auto;
+  max-width: 200px;
+  position: absolute; /* Positionnement absolu pour le placer précisément */
+  top: 10px; /* Aligné près du bord supérieur */
+  right: 20px; /* Aligné près du bord droit, ajusté selon le rectangle jaune */
+}
+
+.logout-button:hover {
+  background-color: #28A878;
 }
 
 .content {
@@ -58,7 +83,7 @@ body {
   justify-content: center;
   align-items: center;
   width: 100%;
-  top:500px;
+  top: 500px;
 }
 
 .form-box{
@@ -69,9 +94,7 @@ body {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
   margin-top: 200px;
-  
 }
-
 
 .form-box input {
   width: 100%;
@@ -80,7 +103,6 @@ body {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
-
 
 button {
   background-color: #31C48D;
@@ -101,10 +123,10 @@ button {
   right: -15px;
 }
 
-
 button:hover {
   background-color: #28A878;
 }
+
 .text-danger {
   color: red; 
   font-size: 0.9em;
@@ -114,7 +136,6 @@ button:hover {
   display: flex;
   flex-direction: column;
   gap: 10px; 
- 
 }
 
 .form-box .btn {
@@ -124,17 +145,14 @@ button:hover {
 
 .empreinte-image {
   max-width: 600px;
-  max-height: 40;
+  max-height: 400px;
   display: block;  
   margin: 20px auto; 
   border-radius: 10px; 
 }
 
-
-
-
 /* Bouton photo */
- .stop-button{
+.stop-button{
   background-color: #31C48D;
   border: none;
   padding: 15px;
@@ -145,7 +163,6 @@ button:hover {
   justify-content: center;
   transition: background 0.3s;
   margin: 10px;
-  
 }
 
 .camera-button:hover, .stop-button:hover{
@@ -162,19 +179,20 @@ button:hover {
     max-width: 95%;
     max-height: 320px;
   }
-
-  
 }
-
 
 .dashboard-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: auto; 
-  margin-top: 500px; 
+  height: auto;
+  margin-top: 160px;
   padding-bottom: 50px;
+  width: 100%;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .dashboard-title {
@@ -182,11 +200,15 @@ button:hover {
   font-weight: bold;
   text-align: center;
   color: rgb(0, 0, 0);
-  margin-bottom: 0; 
+  margin-bottom: 20px; 
   border: 1px solid #ccc;
   background-color: rgba(255, 255, 255, 0.749);
   border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  max-width: 500px;
 }
+
 .camera-feed {
   width: 100%;
   max-width: 400px;
@@ -202,26 +224,6 @@ video {
   border: 2px solid #31C48D;
   border-radius: 10px;
 }
-.logout-button {
-  background-color: #31C48D;
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  position: absolute; 
-  right: 10px; 
-  width: auto;
-  max-width: 200px;
-  top: 150px;
-}
-
-.logout-button:hover {
-  background-color: #2AA075;
-}
 
 .camera-button{
   background-color: #31C48D;
@@ -234,24 +236,32 @@ video {
   justify-content: center;
   transition: background 0.3s;
   margin: 10px;
-  margin-right: 10px;
+  margin-right: 0;
 }
-
 
 .result-container {
   margin-top: 20px;
-  text-align: left;
+  text-align: center;
+  width: 100%;
+  max-width: 500px;
 }
 
 .captured-image {
   max-width: 300px;
   margin-top: 10px;
   border-radius: 5px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .camera-container {
   position: relative;
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
 }
 
 .capture-button {
@@ -269,11 +279,115 @@ video {
 
 .result-container{
   background: white;
-  padding: 50px;
-  width: 500px;
+  padding: 20px;
+  width: 100%;
+  max-width: 500px;
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  margin-top: 200px;
-  
+  margin-top: 20px;
+}
+
+/* Styles pour les modales de consentement */
+.consent-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  z-index: 1000;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+}
+
+.side-modal {
+  left: 20px; /* Déplace la modale sur le côté gauche */
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 300px; /* Réduit la largeur pour ne pas masquer l'image */
+}
+
+.consent-modal p {
+  margin-bottom: 15px;
+  font-size: 16px;
+  color: #333;
+}
+
+.consent-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.consent-modal button {
+  background-color: #31C48D;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 5px;
+}
+
+.consent-modal button:hover {
+  background-color: #28A878;
+}
+
+.consent-modal .reject-button {
+  background-color: #e74c3c;
+}
+
+.consent-modal .reject-button:hover {
+  background-color: #c0392b;
+}
+
+.close-button {
+  background-color: #31C48D;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.close-button:hover {
+  background-color: #28A878;
+}
+
+.reject-message {
+  background-color: #fff;
+  color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  text-align: center;
+  max-width: 300px;
+}
+
+/* Styles pour la section d'upload */
+.upload-section {
+  margin: 20px 0;
+}
+
+.upload-label {
+  background-color: #31C48D;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  display: inline-block;
+  transition: background 0.3s;
+}
+
+.upload-label:hover {
+  background-color: #28A878;
 }
