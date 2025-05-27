@@ -17,6 +17,8 @@ function Dashboard() {
     const [showRejectMessage, setShowRejectMessage] = useState(false);
     const [rejectMessage, setRejectMessage] = useState('');
     const [showImageSourceModal, setShowImageSourceModal] = useState(false);
+    const [showErrorModal, setShowErrorModal] = useState(false); // Nouvelle modale pour les erreurs
+    const [errorMessage, setErrorMessage] = useState(''); // Message d'erreur
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const streamRef = useRef(null);
@@ -27,7 +29,8 @@ function Dashboard() {
         navigator.permissions.query({ name: "camera" }).then((result) => {
             console.log("Statut de la permission caméra:", result.state);
             if (result.state === "denied") {
-                alert("Accès à la caméra refusé ! Vérifiez vos permissions.");
+                setErrorMessage("Accès à la caméra refusé ! Vérifiez vos permissions.");
+                setShowErrorModal(true);
             }
         });
     }, []);
@@ -43,13 +46,15 @@ function Dashboard() {
                 },
                 (error) => {
                     console.error("Erreur de géolocalisation :", error.message);
-                    alert("Impossible d'accéder à la localisation. Vérifiez vos permissions.");
+                    setErrorMessage("Impossible d'accéder à la localisation. Vérifiez vos permissions.");
+                    setShowErrorModal(true);
                 },
                 { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
             );
         } else {
             console.error("Géolocalisation non supportée par ce navigateur.");
-            alert("Votre navigateur ne supporte pas la géolocalisation.");
+            setErrorMessage("Votre navigateur ne supporte pas la géolocalisation.");
+            setShowErrorModal(true);
         }
     }, []);
 
@@ -68,7 +73,8 @@ function Dashboard() {
             setIsCameraOpen(true);
         } catch (error) {
             console.error("Erreur d'accès à la caméra :", error);
-            alert("Impossible d'activer la caméra. Vérifiez vos permissions.");
+            setErrorMessage("Impossible d'activer la caméra. Vérifiez vos permissions.");
+            setShowErrorModal(true);
         }
     };
 
@@ -105,6 +111,8 @@ function Dashboard() {
         const canvas = canvasRef.current;
         if (!canvas) {
             console.error("Canvas n'est pas défini");
+            setErrorMessage("Erreur interne : Canvas non disponible.");
+            setShowErrorModal(true);
             return;
         }
         const maxWidth = 320;
@@ -205,7 +213,8 @@ function Dashboard() {
             console.log("Scan enregistré avec succès !");
         } catch (error) {
             console.error("Erreur lors de l’envoi au serveur :", error);
-            alert(`Erreur lors de l’enregistrement du scan: ${error.message}`);
+            setErrorMessage(`Erreur lors de l’enregistrement du scan: ${error.message}`);
+            setShowErrorModal(true);
         }
     };
 
@@ -263,19 +272,19 @@ function Dashboard() {
         <div>
             {/* En-tête avec le bouton de déconnexion et logo centré */}
             <div className="header">
-                <img src="/logo.png" alt="Logo" className="logo" />
-                <button className="logout-button" onClick={handleLogout}>
+                <img src="/logo.png" alt="Logo de WildLens" className="logo" />
+                <button className="logout-button" onClick={handleLogout} aria-label="Déconnexion">
                     Déconnexion
                 </button>
             </div>
 
             <div className="dashboard-container">
                 <h2 className="dashboard-title">Scannez l'empreinte !</h2>
-                <img src="/empreinte.jpg" alt="Empreinte" className="empreinte-image" />
+                <img src="/empreinte.jpg" alt="Exemple d'empreinte animale" className="empreinte-image" />
 
                 {/* Section pour uploader une image */}
                 <div className="upload-section">
-                    <label htmlFor="image-upload" className="upload-label">
+                    <label htmlFor="image-upload" className="upload-label" aria-label="Télécharger une image">
                         Télécharger une image
                     </label>
                     <input
@@ -284,6 +293,7 @@ function Dashboard() {
                         accept="image/*"
                         onChange={handleImageUpload}
                         style={{ display: 'none' }}
+                        aria-hidden="true"
                     />
                 </div>
 
@@ -291,10 +301,10 @@ function Dashboard() {
                 {isCameraOpen && (
                     <div className="camera-container">
                         <video ref={videoRef} autoPlay playsInline className="camera-feed" />
-                        <button className="capture-button" onClick={captureImage}>
+                        <button className="capture-button" onClick={captureImage} aria-label="Scanner l'empreinte">
                             <Camera size={30} color="white" /> Scanner
                         </button>
-                        <button className="stop-button" onClick={stopCamera}>
+                        <button className="stop-button" onClick={stopCamera} aria-label="Arrêter la caméra">
                             <X size={50} color="white" />
                         </button>
                         <canvas ref={canvasRef} style={{ display: 'none' }} />
@@ -303,20 +313,20 @@ function Dashboard() {
 
                 {/* Bouton pour démarrer la caméra */}
                 {!isCameraOpen && (
-                    <button className="camera-button" onClick={startCamera}>
+                    <button className="camera-button" onClick={startCamera} aria-label="Démarrer la caméra">
                         <Camera size={50} color="white" />
                     </button>
                 )}
 
                 {/* Affichage de l'image et des résultats */}
                 {image && (
-                    <div className="result-container">
+                    <div className="result-container" role="region" aria-live="polite">
                         <h3>Image scannée</h3>
                         <img src={image} alt="Empreinte capturée" className="captured-image" />
                     </div>
                 )}
                 {results && (
-                    <div className="result-container">
+                    <div className="result-container" role="region" aria-live="polite">
                         <h3>Résultats</h3>
                         <p>Provenance : {results.source}</p>
                         <p>Espèce : {results.species}</p>
@@ -334,42 +344,50 @@ function Dashboard() {
 
                 {/* Modale pour le consentement des cookies */}
                 {showCookieConsent && (
-                    <div className="consent-modal side-modal">
-                        <p>Nous utilisons des cookies pour améliorer votre expérience. Acceptez-vous ?</p>
+                    <div className="consent-modal side-modal" role="dialog" aria-labelledby="cookie-consent-title">
+                        <p id="cookie-consent-title">Nous utilisons des cookies pour améliorer votre expérience. Acceptez-vous ?</p>
                         <div className="consent-buttons">
-                            <button onClick={handleCookieAccept}>Oui</button>
-                            <button onClick={handleCookieReject} className="reject-button">Non</button>
+                            <button onClick={handleCookieAccept} aria-label="Accepter les cookies">Oui</button>
+                            <button onClick={handleCookieReject} className="reject-button" aria-label="Refuser les cookies">Non</button>
                         </div>
                     </div>
                 )}
 
                 {/* Modale pour le consentement RGPD */}
                 {showRgpdConsent && !showCookieConsent && (
-                    <div className="consent-modal side-modal">
-                        <p>Nous collectons vos données conformément au Règlement Général sur la Protection des Données (RGPD), une loi européenne qui protège vos informations personnelles. Voulez-vous consentir ?</p>
+                    <div className="consent-modal side-modal" role="dialog" aria-labelledby="rgpd-consent-title">
+                        <p id="rgpd-consent-title">Nous collectons vos données conformément au Règlement Général sur la Protection des Données (RGPD), une loi européenne qui protège vos informations personnelles. Voulez-vous consentir ?</p>
                         <div className="consent-buttons">
-                            <button onClick={handleRgpdAccept}>Oui</button>
-                            <button onClick={handleRgpdReject} className="reject-button">Non</button>
+                            <button onClick={handleRgpdAccept} aria-label="Accepter le RGPD">Oui</button>
+                            <button onClick={handleRgpdReject} className="reject-button" aria-label="Refuser le RGPD">Non</button>
                         </div>
                     </div>
                 )}
 
                 {/* Modale pour les messages de rejet */}
                 {showRejectMessage && (
-                    <div className="consent-modal side-modal reject-message">
-                        <p>{rejectMessage}</p>
-                        <button onClick={() => setShowRejectMessage(false)} className="close-button">OK</button>
+                    <div className="consent-modal side-modal reject-message" role="alertdialog" aria-labelledby="reject-message-title">
+                        <p id="reject-message-title">{rejectMessage}</p>
+                        <button onClick={() => setShowRejectMessage(false)} className="close-button" aria-label="Fermer le message">OK</button>
                     </div>
                 )}
 
                 {/* Modale pour la provenance de l'image */}
                 {showImageSourceModal && (
-                    <div className="consent-modal side-modal">
-                        <p>Cette photo a-t-elle été téléchargée depuis un site extérieur ? (Oui pour externe, Non pour prise avec l'app)</p>
+                    <div className="consent-modal side-modal" role="dialog" aria-labelledby="image-source-title">
+                        <p id="image-source-title">Cette photo a-t-elle été téléchargée depuis un site extérieur ? (Oui pour externe, Non pour prise avec l'app)</p>
                         <div className="consent-buttons">
-                            <button onClick={handleImageSourceAccept}>Oui</button>
-                            <button onClick={handleImageSourceReject} className="reject-button">Non</button>
+                            <button onClick={handleImageSourceAccept} aria-label="Oui, image externe">Oui</button>
+                            <button onClick={handleImageSourceReject} className="reject-button" aria-label="Non, prise avec l'app">Non</button>
                         </div>
+                    </div>
+                )}
+
+                {/* Modale pour les erreurs */}
+                {showErrorModal && (
+                    <div className="consent-modal side-modal error-modal" role="alertdialog" aria-labelledby="error-message-title">
+                        <p id="error-message-title">{errorMessage}</p>
+                        <button onClick={() => setShowErrorModal(false)} className="close-button" aria-label="Fermer l'erreur">OK</button>
                     </div>
                 )}
             </div>
