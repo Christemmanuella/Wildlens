@@ -32,6 +32,13 @@ body {
   transform: translateX(-50%);
 }
 
+.content {
+  margin-top: 140px;
+  width: 100%;
+  max-width: 700px;
+  text-align: center;
+}
+
 .logout-button {
   background-color: #31C48D;
   color: white;
@@ -53,6 +60,36 @@ body {
   transform: scale(1.05);
 }
 
+.location-button {
+  background-color: #31C48D;
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease, transform 0.2s ease;
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.location-button:hover {
+  background-color: #28A878;
+  transform: scale(1.05);
+}
+
+.location-button:disabled {
+  background-color: #a3baba;
+  cursor: not-allowed;
+}
+
+.location-button:disabled:hover {
+  transform: none;
+}
+
 .dashboard-container {
   display: flex;
   flex-direction: column;
@@ -70,7 +107,7 @@ body {
   font-size: 32px;
   font-weight: bold;
   text-align: center;
-  color: white; /* Texte blanc pour contraste avec fond vert */
+  color: white;
   margin-bottom: 20px;
   padding: 10px 20px;
   background-color: #31C48D;
@@ -114,7 +151,9 @@ body {
   transform: scale(1.05);
 }
 
-.camera-button, .capture-button, .stop-button {
+.camera-button,
+.capture-button,
+.stop-button {
   background-color: #31C48D;
   border: none;
   padding: 15px;
@@ -126,9 +165,13 @@ body {
   transition: background 0.3s ease, transform 0.2s ease;
   margin: 10px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  min-width: 60px;
+  min-height: 60px;
 }
 
-.camera-button:hover, .capture-button:hover, .stop-button:hover {
+.camera-button:hover,
+.capture-button:hover,
+.stop-button:hover {
   background-color: #28A878;
   transform: scale(1.1);
 }
@@ -143,7 +186,8 @@ body {
   margin: 20px 0;
 }
 
-.camera-feed, video {
+.camera-feed,
+video {
   width: 100%;
   max-width: 450px;
   height: auto;
@@ -196,7 +240,7 @@ body {
   padding: 25px;
   border-radius: 15px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
+  z-index: 1100;
   text-align: center;
   max-width: 400px;
   width: 90%;
@@ -225,7 +269,8 @@ body {
   gap: 15px;
 }
 
-.consent-modal button, .close-button {
+.consent-modal button,
+.close-button {
   background-color: #31C48D;
   color: white;
   padding: 10px 20px;
@@ -238,7 +283,8 @@ body {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.consent-modal button:hover, .close-button:hover {
+.consent-modal button:hover,
+.close-button:hover {
   background-color: #28A878;
   transform: scale(1.05);
 }
@@ -276,7 +322,8 @@ body {
   animation: fadeIn 0.5s ease forwards;
 }
 
-.form-container, .form-container-login {
+.form-container,
+.form-container-login {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -339,6 +386,159 @@ body {
   }
 }
 
+/* Style pour le bouton Historique des Scans */
+.history-button {
+  background-color: #31C48D;
+  color: white;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 20px;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.history-button:hover {
+  background-color: #28A878;
+  transform: scale(1.05);
+}
+
+/* Styles pour SpeciesDashboard */
+.loading {
+  text-align: center;
+  color: #666;
+  font-size: 18px;
+  margin: 20px 0;
+}
+
+.no-data {
+  text-align: center;
+  color: #888;
+  font-size: 16px;
+  margin: 20px 0;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.species-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.species-table thead {
+  background-color: #31C48D;
+  color: white;
+}
+
+.species-table th,
+.species-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.species-table th {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.species-table td {
+  font-size: 14px;
+  color: #555;
+}
+
+.species-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Styles pour la carte Leaflet */
+.leaflet-container {
+  height: 400px;
+  width: 100%;
+  max-width: 700px;
+  margin: 20px 0;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style pour les cercles de la carte */
+.leaflet-container .leaflet-circle-marker {
+  border: 2px solid #31C48D; /* Bordure verte pour correspondre au thème */
+  transition: transform 0.3s ease; /* Animation au survol */
+}
+
+.leaflet-container .leaflet-circle-marker:hover {
+  transform: scale(1.2); /* Agrandissement au survol */
+  z-index: 1000; /* Assure que le cercle reste au-dessus des autres éléments */
+}
+
+/* Style de secours pour la carte en cas d'erreur */
+.leaflet-error {
+  height: 400px;
+  width: 100%;
+  max-width: 700px;
+  margin: 20px 0;
+  border-radius: 10px;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-size: 16px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style pour la légende des pourcentages */
+.legend {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  color: #333;
+}
+
+.legend h4 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  color: #31C48D;
+  font-weight: bold;
+}
+
+.legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.legend li {
+  margin: 5px 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend .dot {
+  height: 10px;
+  width: 10px;
+  background-color: #31C48D;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Responsivité */
 @media (max-width: 768px) {
   .dashboard-container {
     max-width: 90%;
@@ -353,7 +553,8 @@ body {
     max-height: 300px;
   }
 
-  .camera-feed, video {
+  .camera-feed,
+  video {
     max-width: 100%;
   }
 
@@ -364,6 +565,38 @@ body {
   .form-box {
     padding: 30px;
     max-width: 90%;
+  }
+
+  .species-table th,
+  .species-table td {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .table-wrapper {
+    margin: 10px 0;
+  }
+
+  .leaflet-container,
+  .leaflet-error {
+    height: 300px;
+  }
+
+  .side-modal {
+    left: 10px;
+    max-width: 250px;
+  }
+
+  .location-button {
+    left: 10px;
+  }
+
+  .legend {
+    font-size: 12px;
+  }
+
+  .legend h4 {
+    font-size: 14px;
   }
 }
 
@@ -385,5 +618,46 @@ body {
     font-size: 14px;
     top: 5px;
     right: 10px;
+  }
+
+  .location-button {
+    padding: 8px;
+    top: 5px;
+    left: 10px;
+  }
+
+  .species-table th,
+  .species-table td {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .leaflet-container,
+  .leaflet-error {
+    height: 250px;
+  }
+
+  .side-modal {
+    left: 5px;
+    max-width: 200px;
+    padding: 15px;
+  }
+
+  .consent-modal p {
+    font-size: 14px;
+  }
+
+  .consent-modal button,
+  .close-button {
+    padding: 8px 15px;
+    font-size: 14px;
+  }
+
+  .legend {
+    font-size: 10px;
+  }
+
+  .legend h4 {
+    font-size: 12px;
   }
 }

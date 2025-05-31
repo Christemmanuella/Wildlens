@@ -14,16 +14,27 @@ app.use(bodyParser.json({ limit: '500mb' }));
 app.use(bodyParser.urlencoded({ limit: '500mb', extended: true }));
 console.log('Limite de taille des requêtes configurée à 500mb');
 
-// Configuration de CORS pour permettre les requêtes du frontend
+// Configuration de CORS pour permettre les requêtes du frontend (ngrok et localhost)
+const allowedOrigins = [
+    'http://localhost:3001',
+    'https://frontend-url.ngrok-free.app' // Remplace par l'URL ngrok réelle de ton frontend
+];
 app.use(cors({
-    origin: 'http://localhost:3001',
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 }));
 
 // Middleware pour logger les requêtes entrantes
 app.use((req, res, next) => {
-    console.log(`Requête reçue : ${req.method} ${req.url} - Headers:`, req.headers);
+    console.log(`[${new Date().toISOString()}] Requête reçue : ${req.method} ${req.url} - Origin: ${req.headers.origin} - Headers:`, req.headers);
     next();
 });
 
@@ -149,16 +160,18 @@ app.post('/scans', authenticateToken, (req, res) => {
     const { species, timestamp, imageCount, averageTime, image, latitude, longitude } = req.body;
     const userId = req.user.id;
 
+    // Log des données reçues
+    console.log('Requête /scans reçue avec données :', { species, timestamp, imageCount, averageTime, image: image ? 'Image présente' : 'Image absente', latitude, longitude, userId });
+
     // Validation des champs requis
-    if (!species || !timestamp || !imageCount || !averageTime || !image) {
+    if (!species || !timestamp || !imageCount || !averageTime) {
+        console.log('Champs manquants dans la requête /scans');
         return res.status(400).json({ message: 'Tous les champs sont requis' });
     }
 
-    console.log('Données reçues pour /scans :', { species, timestamp, imageCount, averageTime, image, latitude, longitude, userId });
-
     // Insertion du scan dans la base de données
     const query = 'INSERT INTO scans (species, timestamp, image_count, average_time, image, latitude, longitude, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-    db.query(query, [species, timestamp, imageCount, averageTime, image, latitude || null, longitude || null, userId], (err) => {
+    db.query(query, [species, timestamp, imageCount, averageTime, image || null, latitude || null, longitude || null, userId], (err) => {
         if (err) {
             console.error('Erreur MySQL (Scan) :', err.message);
             return res.status(500).json({ message: `Erreur lors de l’enregistrement du scan : ${err.message}` });
@@ -168,16 +181,39 @@ app.post('/scans', authenticateToken, (req, res) => {
     });
 });
 
-// Route pour récupérer les scans d'un utilisateur
+// Route pour récupérer tous les scans (filtrée par utilisateur connecté)
 app.get('/scans', authenticateToken, (req, res) => {
-    const query = 'SELECT * FROM scans WHERE user_id = ?';
-    db.query(query, [req.user.id], (err, results) => {
+    const userId = req.user.id;
+    const query = 'SELECT * FROM scans WHERE user_id = ? ORDER BY timestamp DESC';
+    db.query(query, [userId], (err, results) => {
         if (err) {
             console.error('Erreur MySQL (Get Scans) :', err.message);
             return res.status(500).json({ message: `Erreur lors de la récupération des scans : ${err.message}` });
         }
         res.status(200).json(results);
     });
+});
+
+// Route pour récupérer les infos d'une espèce spécifique
+app.get('/species-info/:species', (req, res) => {
+    const species = req.params.species;
+    const query = 'SELECT * FROM infos_especes WHERE espece = ?';
+    db.query(query, [species], (err, results) => {
+        if (err) {
+            console.error('Erreur MySQL (Species Info) :', err.message);
+            return res.status(500).json({ message: `Erreur lors de la récupération des infos de l’espèce : ${err.message}` });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'Espèce non trouvée' });
+        }
+        res.status(200).json(results[0]); // Retourne la première correspondance
+    });
+});
+
+// Route de test pour vérifier que le backend répond
+app.get('/', (req, res) => {
+    console.log('Requête / reçue');
+    res.status(200).json({ message: 'Backend fonctionnel' });
 });
 
 // Middleware de gestion des erreurs globales
