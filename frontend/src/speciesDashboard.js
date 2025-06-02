@@ -6,10 +6,12 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000'
 function SpeciesDashboard() {
   const [scans, setScans] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchScans = async () => {
       setLoading(true);
+      setError(null);
       try {
         // Récupérer les scans depuis le backend MySQL
         const token = localStorage.getItem("token");
@@ -27,23 +29,25 @@ function SpeciesDashboard() {
         const data = await response.json();
         // Joindre les infos espèces depuis /species-info
         const enrichedScans = await Promise.all(
-          data.map(async (scan) => {
+          data.map(async (scan, index) => {
             try {
               const speciesResponse = await fetch(`${BACKEND_URL}/species-info/${scan.species}`);
               if (!speciesResponse.ok) {
                 throw new Error(`Erreur HTTP ${speciesResponse.status}`);
               }
               const speciesInfo = await speciesResponse.json();
-              return { ...scan, ...speciesInfo };
+              return { ...scan, ...speciesInfo, uniqueKey: scan.id || `${scan.timestamp}_${index}` };
             } catch (error) {
               console.error('Erreur pour l’espèce :', error);
-              return { ...scan, description: 'N/A', fun_fact: 'N/A' };
+              return { ...scan, description: 'N/A', fun_fact: 'N/A', uniqueKey: scan.id || `${scan.timestamp}_${index}` };
             }
           })
         );
         setScans(enrichedScans);
       } catch (error) {
         console.error('Erreur lors de la récupération des scans :', error);
+        setError('Impossible de charger l’historique des scans. Veuillez réessayer plus tard.');
+        setScans([]);
       }
       setLoading(false);
     };
@@ -52,6 +56,7 @@ function SpeciesDashboard() {
   }, []);
 
   if (loading) return <div className="loading">Chargement...</div>;
+  if (error) return <div className="error text-danger">{error}</div>;
 
   return (
     <div className="dashboard-container">
@@ -60,7 +65,7 @@ function SpeciesDashboard() {
         <p className="no-data">Aucun historique pour le moment</p>
       ) : (
         <div className="table-wrapper">
-          <table className="species-table">
+          <table className="species-table" role="grid" aria-label="Historique des scans">
             <thead>
               <tr>
                 <th>Espèce</th>
@@ -75,7 +80,7 @@ function SpeciesDashboard() {
             </thead>
             <tbody>
               {scans.map((scan) => (
-                <tr key={scan.id}>
+                <tr key={scan.uniqueKey}>
                   <td>{scan.species}</td>
                   <td>{scan.nom_latin || 'N/A'}</td>
                   <td>{scan.famille || 'N/A'}</td>

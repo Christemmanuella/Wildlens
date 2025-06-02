@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Login from './Login';
 import Signup from './Signup';
 import Dashboard from './Dashboard';
-import SpeciesDashboard from './speciesDashboard'; // Ajustement du chemin
+import SpeciesDashboard from './speciesDashboard';
 import './App.css';
 
 function App() {
@@ -20,7 +20,7 @@ function MainContent() {
   return (
     <div>
       <div className="header">
-        <img src="logo.png" alt="Logo" className="logo" />
+        <img src="logo.png" alt="Logo de WildLens" className="logo" />
       </div>
 
       {location.pathname === '/' && (

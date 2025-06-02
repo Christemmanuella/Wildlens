@@ -14,27 +14,34 @@ app.use(bodyParser.json({ limit: '500mb' }));
 app.use(bodyParser.urlencoded({ limit: '500mb', extended: true }));
 console.log('Limite de taille des requêtes configurée à 500mb');
 
-// Configuration de CORS pour permettre les requêtes du frontend (ngrok et localhost)
+// Configuration de CORS pour permettre les requêtes du frontend
 const allowedOrigins = [
-    'http://localhost:3001',
-    'https://frontend-url.ngrok-free.app' // Remplace par l'URL ngrok réelle de ton frontend
+    'http://localhost:3000', 
+    'http://localhost:3001'  
 ];
 app.use(cors({
     origin: (origin, callback) => {
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
+            console.log(`Origine non autorisée : ${origin}`);
             callback(new Error('Not allowed by CORS'));
         }
     },
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
 
-// Middleware pour logger les requêtes entrantes
+// Middleware pour logger les requêtes entrantes et gérer les en-têtes CORS
 app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] Requête reçue : ${req.method} ${req.url} - Origin: ${req.headers.origin} - Headers:`, req.headers);
+    res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
     next();
 });
 
@@ -206,7 +213,7 @@ app.get('/species-info/:species', (req, res) => {
         if (results.length === 0) {
             return res.status(404).json({ message: 'Espèce non trouvée' });
         }
-        res.status(200).json(results[0]); // Retourne la première correspondance
+        res.status(200).json(results[0]);
     });
 });
 
